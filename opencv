@@ -1,0 +1,385 @@
+opencv
+
+first we learnt to install two modules about the opencv that were
+
+pip install opencv-contrib-python
+pip install caer (module created by freecodecamp.org)
+
+
+reading photos using imshow and imread
+
+
+first import the cv2 module as cv
+then read the img file in a variable and provide its path or the name in the cv.imread('name of file with path '  ) module then imshow() which take two argument the name of the file and the variable of the reading module got it?
+and the file is opened until any key is hit on the keyboard cv.waitkey(0) providing 0 as the argument gives classfication as any key is valid for the closing of the program
+
+
+code =  img =cv.imread('img.jpg')
+             cv.imshow('img',img)
+            cv.waitKey(0)
+
+this was an easy approach in regards of opening a video file it requires a frame and iterator and bool to counter the end of the video its easy but not in comparison to what we did earlier so lets go
+
+
+first same as importing the module of the cv2
+then making a variable and calling the videocapture() module with the file name with .mp4 extension but here is a twist that the it can either take an integer as an argument and by argument we are llooking at the active video supported devices connected for eg 0 is the main webcam of the computer and 1 is the other webcam and so on so forth so basically we can import any video or we can directly open the webcam
+
+let continue further the videocapture() module is stored in a var of any name
+
+then a while loop is run ? while loop why ? you ask why , just because we read the video per frame and run it in the loop until its True so we require a bool variable inside the loop and a frame variable to open the frame and see shit so lets go
+
+while(True):
+	isTrue,frame=cap.read()
+	cv.imshow('koko',frame)   #just like the image imshow but for video
+
+that's it for now we have now read and basically opened a video but it will go forever if it is not meant with appropriate break condition so we implement an if condition using a waitkey(20) and a key break of 'd' key on keyboard
+
+
+while(True):
+	isTrue,frame=cap.read()
+	cv.imshow('koko',frame)
+	if waitKey(20) & 0xFF=ord('d):
+			break
+
+then at the last we use thea realease module to capture the video and using destroyallwindows() module we close it
+
+
+so the final syntax for reading the video file might be
+import cv2 as cv
+#reading images
+#img=cv.imread('photos.jpg')
+#cv.imshow('photos',img)
+
+#reading videos
+cap=cv.VideoCapture('koko.mp4')
+while(True):
+    isTrue,frame=cap.read()    #capturing frame by frame
+    cv.imshow('koko',frame)
+
+    if cv.waitKey(20) & 0xFF==ord('d'):
+        break
+cap.release()
+cv.destroyAllWindows()
+#cv.waitKey(0)
+
+print(0xFF)
+
+
+ERROR -215 assertion error
+   it basically occurs when the cv doesnot found any more frame
+   if we provide a wrong path
+
+
+resizing and rescaling images:
+  next on we created a function to rescale our video and picture as well if the video's is done why not the picture so lets do it ok ?
+  we are taking two arguments in this function one is the frame and one is the scale and we set the scale to some value we like and then we proceed on to the next thing as we have
+  learnt in the numpy library about the .shape() module it give the row and coloums we are using that in respect to the height and width of the resizing img/vid so we make two
+  variable first one is the widht and second one is the height as width is the col so we take it as .shape[1] * scale_value and so for the height num of rows so .shape[0]*scale_value
+  now we have to typecast them into int as it is a float value so we then typecast it and proceed to making a tuple of dimension as dim=(width,height) and return this tuple to the
+  cv.resizing() module which takes argument as follows the frame and the dimension and interpolation=cv.INTER_AREA
+
+syntax:
+
+ def rescale(frame,scale=1.25):
+    width=int(frame.shape[1]*scale -1)
+    height=int(frame.shape[0]*scale)
+
+    dim=(width,height)
+    return cv.resize(frame,dim,interpolation=cv.INTER_AREA)
+cap=cv.VideoCapture('koko.mp4')
+
+
+the function of reading the video file or image file is same as before and is called and we pass an argument of resizd_frame as calling the function and printing it with the imshow()
+module
+
+syntax:
+while(True):
+    istrue,frame=cap.read()
+    frame_res=rescale(frame)
+
+    cv.imshow('resized kok',frame_res)
+
+    if cv.waitKey(10) & 0xFF==ord('d'):
+        break
+another function we encountered to resize a live is making a seperate function which basically works on live videos only not on img or vids so we just decalre a function
+and provide two arguments that are width and height then two modules of capture.set(3,width ) and capture.set(4 ,height ) the 3 represent the width and 4 represent the height of the
+video
+
+
+syntax
+change(width ,height ):
+  capture.set(3,widht)
+  capture.set(4,height)
+
+
+-------------------------------
+
+drawing images , text and shape :
+
+we have now proceeded to some good stuff in opencv drawing an image and editing it with our ease so first what we gotta do is import the numpy module and
+starting to create an array of zeros with 2 dimension height width and decalaring the width in the third one , and providing the data type as uint8 for the
+image as used . so now we can get to see this blank photo just by calling the imshow function and passing in the argument as the zeros's array or image
+we just created so lets get moving with the syntax :
+
+ syntax :
+
+ import numpy as np
+ img=np.zeros((500,500,3),dtype='uint8')
+
+ cv.imshow('',img)
+
+
+ now we can edit this pretty much with our flexibilty so firstly we will change the background color of the img file and let's say we want it plain white
+
+ so img[:]=255,255,255
+will change the whole img to white color we can also paint a part of it just by passing in the pixels as arguments
+
+img[0:255,255:500]=122,221,102 remember that the right hand side argument should be always greater than the left one as it moves from left to right bascially left one
+                    denotes the rows and right one denotes the coloumns pixel and its simple as slicing
+
+we can also draw shapes if we adjust the pixel according to a line based figure so its not a problem but why to make a fuss about it when we a function to
+create the objects we want and its very simple
+
+first module we are using is the cv.rectangle() which take a group of arguments and we can also make several more figure with this passing correct arguments
+so cv.rectangle() firstly takes the IMAGE the name we have designated to the img next one is the PT1 starting point and PT2 the ending one basically more like
+slicing ok ? then it takes the color of the figure you want so we can provide the RGB color value ok ! another it takes the thickeness of the lines we can
+use any positive number but if we want it to be color blocked figure we can pass in -1 or cv.FILLED argument to get it filled now let us look onto the syntax
+and see how it works
+
+syntax:
+#normal syntax
+cv.rectangle(img,(0,0),(200,499),(175,88,102),thickness=7)
+#blocked figure
+cv.rectangle(img,(0,0),(200,499),(175,88,102),thickness=-1 or cv.FILLED) #this will make a color block rect
+
+#here see we have used something else in place of providing the pixels or points in the img whats tha ?
+cv.rectangle(img,(0,0),(img.shape[1]//3,img.shape[0]//2),(0,255,0),thickness= cv.FILLED) #its nothing but the use of .shape function
+                                                                                          that we have used to carve out a matrix more like that
+                                                                                          we take the row or height divide it by some integer and
+                                                                                          it moves till that part and same with the width denoted with
+                                                                                          1 and this makes more sense in writing
+
+next we learnt about making a cirle with some radius blocked or lines
+
+so it starts with cv.cirle() taking in arguments first as IMAGE second is the point of starting then the radius and further it takes the color and
+thickness
+
+syntax:
+cv.circle(img,(img.shape[0]//2,img.shape[1]//2),90,(22,122,102),thickness=12)
+
+next is the line function which draws a line from one point to another
+
+so its start as we have seen IMAGE then the pt1 and pt2 color and thickeness
+
+syntax:
+cv.line(img,(0,0),(223,223),(221,22,122),2)
+
+last we have learnt about the writing texts it easy as writing a text direclty  it takes img then the text itself the orgin of the text then fontface
+
+then the fontscale then the color and last the thickness
+cv.putText(img,'helo',(255,255),cv.FONT_HERSHEY_TRIPLEX,1.0,(220,220,200),4)
+
+
+-----------------------------------------------
+#learning about the basic functions cvtColor,GaussianBlur,canny,dilate,erode,resize,slicing image
+
+img=cv.imread('photos/bridge-53769__480.jpg')
+cv.imshow('real',img)
+
+#now lets get the gray scale on this image using cv.cvtcolor
+
+gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+cv.imshow('gray',gray)
+
+#now we will apply blur on this image using gaussian blur there are a lot of method but here using gaussian
+# we pass the src a tuple of 2*2 that should be odd increasing the value of tuple results in increment of blur intensity
+#blur can be used to increase the intensity and various up and downs in an image
+
+blur =cv.GaussianBlur(img ,(3,3),cv.BORDER_DEFAULT)
+cv.imshow('blur',blur)
+
+#egde cascade
+#to find the edges in an image
+# we are using canny method
+edge=cv.Canny(img,225,225)
+
+cv.imshow('edges',edge)
+
+edge2=cv.Canny(img,100,100)
+cv.imshow('edges',edge2)
+
+
+edge3=cv.Canny(img,500,500)
+cv.imshow('edges',edge3)
+
+#next we are dealing with dialating the image it takes the edged image
+#edge cascade
+
+dialted=cv.dilate(edge3,(3,3),iterations=3)
+cv.imshow('dialted',dialted)
+
+#we can reverse the dialted image back into the edged image it takes dialted image and iteration and a tuple
+#thats called eroding
+
+eroding=cv.erode(dialted,(3,3),iterations=3)
+cv.imshow('eroded',eroding)
+
+#resizing the image doesnt care about the aspaect ratio we can also use interpolation as linear area or cubic
+
+resize=cv.resize(img,(500,500),interpolation=cv.INTER_LINEAR_EXACT)
+cv.imshow('resize',resize)
+
+# we can crop the image by array slicing and get a poortiong of it
+crop=img[20:225,225:500]
+cv.imshow('croppped',crop)
+cv.waitKey(0)
+
+
+----------------------------------------------
+# getting the countors of the image which are basically the joined edges  , threshold img and putting the edges into a blank img
+import cv2 as cv
+import numpy as np
+
+img=cv.imread('photos/mum.jpeg')
+gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+resize=cv.resize(gray,(700,800),interpolation=cv.INTER_CUBIC)
+cv.imshow('resize' ,resize)
+blur=cv.GaussianBlur(resize,(3,3),cv.BORDER_ISOLATED)
+# cany=cv.Canny(blur,120,155)
+# cv.imshow('canny' ,cany)
+blank=np.zeros(img.shape,dtype='uint8')
+blank2=cv.resize(blank,(700,800),interpolation=cv.INTER_CUBIC)
+
+cv.imshow('b;ck',blank2)
+#threshold method which converts the img into binary of 1 and 0 so the displayed image is b & w so we declare the intensity
+#in this method of white and black alone with the imh
+
+ret,thresh=cv.threshold(blur,100,180,cv.THRESH_BINARY)
+cv.imshow('thres',thresh)
+
+#getting the contours basically they are the edges in the image which connect
+
+contours,heirechy=cv.findContours(thresh,cv.RETR_LIST,cv.CHAIN_APPROX_SIMPLE)
+print(f'contour count of img are{len(contours)}')
+#we can now draw the contours over our blank image using cv.drawcontours mehtod
+#but this method has a draw back so we can use cany function to directly illustrate the img with edges its like a mirror image of
+#that of cany function
+
+draw=cv.drawContours(blank2,contours,-1,(255,0.0),1)
+cv.imshow('draw',draw)
+
+
+cv.waitKey(0)
+
+
+  -----------------------------------------------------
+
+  #coverting the images from BGR TO GRAY , BGR TO HSV , BGR TO LAB
+  # and convertig back from gray lab or hsv into BGR
+
+  import cv2 as cv
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+img1=cv.imread("photos/bridge.jpg")
+#we plotted this image in to the matplot lib and it shows completly different color saturation as for the bgr
+img=cv.resize(img1,(500,500),cv.INTER_CUBIC)
+# plt.imshow(img)
+# plt.show()
+cv.imshow('imh',img)
+# different types of color spaces
+gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+cv.imshow('gray',gray)
+# eroding=cv.erode(gray_bgr,(7,7),iterations=5)
+# cv.imshow('eroding',eroding)
+hsv=cv.cvtColor(img,cv.COLOR_BGR2HSV)
+cv.imshow('hsv',hsv)
+
+lab=cv.cvtColor(img,cv.COLOR_BGR2Lab)
+cv.imshow('lab',lab)
+
+hsv_bgr=cv.cvtColor(hsv,cv.COLOR_HSV2BGR)
+cv.imshow('bgr+hsv',hsv_bgr)
+cv.waitKey(0)
+
+---------------------------------------------------------
+
+# here we learnt about the merge and split dividing the image into 3 channels of B G R repectively and then merging them together or merging them with the balnk img to get the
+# appropriate components
+import cv2 as cv
+import numpy as np
+
+img1=cv.imread('photos/mum.jpeg')
+img=cv.resize(img1,(500,500),cv.INTER_CUBIC)
+# we are splittiing the image into the color channels of 3 B G R so here what we are doing is that calling split method and putting
+#each image as a differnt channel
+
+#all these images are in grayscale showing a dark or light component to display the channels
+b,g,r=cv.split(img)
+cv.imshow('blue',b)
+cv.imshow('greeb',g)
+cv.imshow('red',r)
+print(img.shape)# we are printing out the pixel along with the channels
+print(b.shape)
+print(g.shape)
+print(r.shape)
+
+#here merging the 3 block channels together
+
+merge=cv.merge([b,g,r])
+cv.imshow('mer',merge)
+
+#we have another method of doing it with the color that requires a blank img and we put the b g r values in merge method lets c
+
+#creating a blank img
+blank=np.zeros(img.shape[:2],dtype='uint8')
+
+blue=cv.merge([b,blank,blank])  # putting bgr values in their respective blocks BGR
+green=cv.merge([blank,g,blank])
+red=cv.merge([blank,blank,r])
+
+cv.imshow('blue',blue)
+cv.imshow('greeb',green)
+cv.imshow('red',red)
+cv.waitKey(0)
+
+
+
+#plotting histogram of images bgr and grayscale
+
+
+import cv2 as cv
+from cv2 import calcHist
+import matplotlib.pyplot as plt
+import numpy as np
+
+img1=cv.imread("photos/cat.jpg")
+img=cv.resize(img1,[500,500],cv.INTER_CUBIC)
+cv.imshow("hello",img)
+# hist=cv.calcHist([img],[0],None,[256],[0,256])
+blank=np.zeros(img.shape[:2],dtype='uint8')
+cir=cv.circle(blank,(100,150),90,(255),-1)
+cv.imshow("cir",cir)
+
+# plt.plot(hist)
+# plt.xlim([0,256])
+mask=cv.bitwise_and(img,img,mask=cir)
+cv.imshow("mask",mask)
+
+# plt.show()
+col=['b','g','r']
+for i,c in enumerate(col):
+    hist=cv.calcHist([img],[i],cir,[256],[0,256])
+    plt.plot(hist,color=c)
+    plt.xlim([0,256])
+
+
+
+plt.show()
+
+
+
+
+
+cv.waitKey(0)
